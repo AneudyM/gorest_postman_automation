@@ -2,7 +2,7 @@
 
 This repository contains a Postman Collection and environment exports for the
 API Automation of the Go REST site's `/users` endpoint. It covers tests for basic functionality
-such as creating, updating, and deleting users, as well as error validations.
+such as creating, updating and deleting users, as well as error validations.
 Once you get this collection, setting up the automation is easy. You'll only need
 to retrieve an access token from Go REST.
 
@@ -28,7 +28,7 @@ Postman will automagically pick both files for import. Just click on the _**Impo
 
 #### 3. Request an access token from Go REST
 
-To request an access token from Go REST you can use this url: `https://gorest.co.in/consumer/login`
+To request an access token from Go REST you can use this URL: `https://gorest.co.in/consumer/login`
 
 #### 4. Configuring your access token
 
@@ -48,7 +48,7 @@ collections. Then, click on the _**Run**_ button to the right.
 ![img_5](https://user-images.githubusercontent.com/8399767/155729323-6c4aabc8-724d-438e-ab80-62ad51eb54c7.png)
 
 The Test Runner should show all the available tests in the collection. You can select which ones
-you want to include in the run. Click on _**Run TecBeats API Automation Challenge**_ button.
+you want to include in the run. Click on the _**Run TecBeats API Automation Challenge**_ button.
 
 ![img_6](https://user-images.githubusercontent.com/8399767/155731470-6e9fb2d2-d4a7-46b2-88d4-86678320b5f7.png)
 
@@ -58,14 +58,14 @@ Test results should look like the following:
 
 ## Troubleshooting
 
-1. Make sure you have the TecBeats Environment active
+#### 1. Make sure you have the TecBeats Environment active
 
 If you encounter the following error, please, make sure you have the TecBeats Environment
 active.
 
 ![img_10](https://user-images.githubusercontent.com/8399767/155731668-9a248e6b-1a05-49bc-bc5d-8781ad05e346.png)
 
-2. Make sure your access token has not expired, and it is set correctly
+#### 2. Make sure your access token has not expired, and it is set correctly
 
 If all of your tests are failing, please, make sure your access token has not expired
 and that it was set correctly in Postman.
