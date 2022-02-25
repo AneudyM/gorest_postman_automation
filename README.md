@@ -37,3 +37,37 @@ environment. You will see the `access_token` environment variable to the right. 
 field with your access token.
 
 ![img_4](https://user-images.githubusercontent.com/8399767/155728194-1587a697-8e2b-4a5f-a8d3-b1205e0c924e.png)
+
+Make sure to save your changes.
+
+## Running the tests
+
+To run the tests, select the **TecBeats API Automation Challenge** collection from the list of
+collections. Then, click on the **Run** button to the right.
+
+![img_5](https://user-images.githubusercontent.com/8399767/155729323-6c4aabc8-724d-438e-ab80-62ad51eb54c7.png)
+
+The Test Runner should show all the available tests in the collection. You can select which ones
+you want to include in the run. Click on **Run TecBeats API Automation Challenge** button.
+
+![img_6](https://user-images.githubusercontent.com/8399767/155731470-6e9fb2d2-d4a7-46b2-88d4-86678320b5f7.png)
+
+Test results should look like the following:
+
+![img_7](https://user-images.githubusercontent.com/8399767/155731532-6f140ebc-14de-409c-bccd-1d62a41f5939.png)
+
+## Troubleshooting
+
+1. Make sure you have the TecBeats Environment active
+
+If you encounter the following error, please, make sure you have the TecBeats Environment
+active.
+
+![img_10](https://user-images.githubusercontent.com/8399767/155731668-9a248e6b-1a05-49bc-bc5d-8781ad05e346.png)
+
+2. Make sure your access token has not expired, and it is set correctly
+
+If all of your tests are failing, please, make sure your access token has not expired
+and that it was set correctly in Postman.
+
+![img_11](https://user-images.githubusercontent.com/8399767/155731678-04c27ffa-4a66-4e1a-9ffb-ca7f8aeeb084.png)
