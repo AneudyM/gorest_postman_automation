@@ -1,0 +1,845 @@
+{
+	"info": {
+		"_postman_id": "5baf1fcc-7aac-4bec-9012-6a944b434f07",
+		"name": "TecBeats API Automation Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "E2E Users API Test",
+			"item": [
+				{
+					"name": "Create a new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"\r",
+									"const expectedName = pm.variables.replaceIn(\"{{name}}\");\r",
+									"const expectedGender = pm.variables.replaceIn(\"{{gender}}\");\r",
+									"const expectedStatus = pm.variables.replaceIn(\"{{status}}\");\r",
+									"const expectedEmail = pm.variables.replaceIn(\"{{email}}\");\r",
+									"\r",
+									"pm.collectionVariables.set(\"id\", jsonResponse.id);\r",
+									"\r",
+									"console.log(jsonResponse);\r",
+									"\r",
+									"pm.test(\"it should return status '201 Created'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property(\"code\", 201);\r",
+									"    pm.expect(pm.response).to.have.property(\"status\", \"Created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should return a valid user ID\", () => {\r",
+									"    pm.expect(jsonResponse.id).exist;\r",
+									"    pm.expect(jsonResponse.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"verify the 'name' of the newly created user is correct\", () => {\r",
+									"    pm.expect(jsonResponse.name).to.eql(expectedName);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"verify the 'email' of the newly created user is correct\", () => {\r",
+									"    pm.expect(jsonResponse.email).to.eql(expectedEmail);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"verify the 'gender' of the newly created user is correct\", () => {\r",
+									"    pm.expect(jsonResponse.gender).to.eql(expectedGender);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"verify the 'status' of the newly created user is correct\", () => {\r",
+									"    pm.expect(jsonResponse.status).to.eql(expectedStatus);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const firstName = pm.variables.replaceIn('{{$randomFirstName}}');\r",
+									"const lastName = pm.variables.replaceIn('{{$randomLastName}}');\r",
+									"pm.collectionVariables.set(\"name\", firstName + \" \" + lastName);\r",
+									"pm.collectionVariables.set(\"email\", firstName + \".\" + lastName + \"@mock.com\");\r",
+									"\r",
+									"function randOption(max) {\r",
+									"    return Math.floor(Math.random() * 2);\r",
+									"}\r",
+									"\r",
+									"const gender = (randOption(2) === 1) ? \"male\" : \"female\";\r",
+									"pm.collectionVariables.set(\"gender\", gender);\r",
+									"const status = (randOption(2) === 1) ? \"inactive\" : \"active\";\r",
+									"pm.collectionVariables.set(\"status\", status);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a user details by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"\r",
+									"const expectedId = Number(pm.variables.replaceIn(\"{{id}}\"));\r",
+									"const expectedName = pm.variables.replaceIn(\"{{name}}\");\r",
+									"const expectedEmail = pm.variables.replaceIn(\"{{email}}\");\r",
+									"\r",
+									"console.log(jsonResponse);\r",
+									"\r",
+									"pm.test(\"it should return status '200 OK'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property(\"code\", 200);\r",
+									"    pm.expect(pm.response).to.have.property(\"status\", \"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should verify the ID of the requested user is correct\", () => {\r",
+									"    pm.expect(jsonResponse.id).to.eql(expectedId);\r",
+									"    pm.expect(jsonResponse.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should verify the name in the response is correct\", () => {\r",
+									"    pm.expect(jsonResponse.name).to.equal(expectedName);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should verify the email in the response is correct\", () => {\r",
+									"    pm.expect(jsonResponse.email).to.equal(expectedEmail);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users/{{id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user details with PUT",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function randOption(max) {\r",
+									"    return Math.floor(Math.random() * 2);\r",
+									"}\r",
+									"\r",
+									"const status = (randOption(2) === 1) ? \"active\" : \"inactive\";\r",
+									"pm.collectionVariables.set(\"status\", status);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"const expectedId = Number(pm.variables.replaceIn(\"{{id}}\"));\r",
+									"const expectedStatus = pm.variables.replaceIn(\"{{status}}\");\r",
+									"\r",
+									"console.log(jsonResponse);\r",
+									"\r",
+									"pm.test(\"it should return status '200 OK'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property(\"code\", 200);\r",
+									"    pm.expect(pm.response).to.have.property(\"status\", \"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should verify the updated user ID is correct\", () => {\r",
+									"    pm.expect(jsonResponse.id).to.eql(expectedId);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should verify the status value updated\", () => {\r",
+									"    pm.expect(jsonResponse.status).to.eql(expectedStatus);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users/{{id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user details with PATCH",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var fname = pm.variables.replaceIn('{{$randomFirstName}}');\r",
+									"var lname = pm.variables.replaceIn('{{$randomLastName}}');\r",
+									"pm.collectionVariables.set(\"name\", fname + \" \" + lname);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"const expectedName = pm.variables.replaceIn(\"{{name}}\");\r",
+									"\r",
+									"console.log(jsonResponse);\r",
+									"\r",
+									"pm.test(\"it should return status '200 OK'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property(\"code\", 200);\r",
+									"    pm.expect(pm.response).to.have.property(\"status\", \"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should verify the name was updated successfully\", () => {\r",
+									"    pm.expect(jsonResponse.name).to.eql(expectedName);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users/{{id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"it should return status '204 No Content'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property(\"code\", 204);\r",
+									"    pm.expect(pm.response).to.have.property(\"status\", \"No Content\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users/{{id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Create user error validations",
+			"item": [
+				{
+					"name": "email has already been taken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"const expectedMessage = \"has already been taken\";\r",
+									"\r",
+									"pm.test(\"it should return status '422 Unprocessable Entity'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property('code', 422);\r",
+									"    pm.expect(pm.response).to.have.property('status', \"Unprocessable Entity\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should return email '\" + expectedMessage + \"' error message\", () => {\r",
+									"    pm.expect(jsonResponse[0].field).to.equal(\"email\");\r",
+									"    pm.expect(jsonResponse[0].message).to.equal(expectedMessage);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const access_token = pm.variables.replaceIn(\"{{access_token}}\");\r",
+									"\r",
+									"const createUserRequest = {\r",
+									"    url: \"https://gorest.co.in/public/v2/users\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        \"Accept\": \"application/json\",\r",
+									"        \"Content-Type\": \"application/json\",\r",
+									"        \"Authorization\": \"Bearer \" + access_token\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: \"raw\",\r",
+									"        raw: JSON.stringify({\r",
+									"            name: \"Roger Rabbit\",\r",
+									"            email: \"Waylon.Kulas@mock.com\",\r",
+									"            gender: \"male\",\r",
+									"            status: \"active\"\r",
+									"        })\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.sendRequest(createUserRequest, (err, response) => {\r",
+									"    console.log(err ? err : response.json());\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Roger Rabbit\",\r\n    \"email\": \"Waylon.Kulas@mock.com\",\r\n    \"gender\": \"male\",\r\n    \"status\": \"active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "name can't be blank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"const expectedMessage = \"can't be blank\";\r",
+									"\r",
+									"pm.test(\"it should return status '422 Unprocessable Entity'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property('code', 422);\r",
+									"    pm.expect(pm.response).to.have.property('status', \"Unprocessable Entity\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should return name '\" + expectedMessage + \"' error message\", () => {\r",
+									"    pm.expect(jsonResponse[0].field).to.equal(\"name\");\r",
+									"    pm.expect(jsonResponse[0].message).to.equal(expectedMessage);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{$randomExampleEmail}}\",\r\n    \"gender\": \"male\",\r\n    \"status\": \"active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "email can't be blank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"const expectedMessage = \"can't be blank\";\r",
+									"\r",
+									"pm.test(\"it should return status '422 Unprocessable Entity'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property('code', 422);\r",
+									"    pm.expect(pm.response).to.have.property('status', \"Unprocessable Entity\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should return email '\" + expectedMessage + \"' error message\", () => {\r",
+									"    pm.expect(jsonResponse[0].field).to.equal(\"email\");\r",
+									"    pm.expect(jsonResponse[0].message).to.equal(expectedMessage);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n    \"gender\": \"male\",\r\n    \"status\": \"active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "gender can't be blank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"const expectedMessage = \"can't be blank\";\r",
+									"\r",
+									"pm.test(\"it should return status '422 Unprocessable Entity'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property('code', 422);\r",
+									"    pm.expect(pm.response).to.have.property('status', \"Unprocessable Entity\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should return gender field '\" + expectedMessage + \"' error message\", () => {\r",
+									"    pm.expect(jsonResponse[0].field).to.equal(\"gender\");\r",
+									"    pm.expect(jsonResponse[0].message).to.equal(expectedMessage);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n    \"email\": \"{{$randomExampleEmail}}\",\r\n    \"status\": \"active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "status can't be blank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"const expectedMessage = \"can't be blank\";\r",
+									"\r",
+									"pm.test(\"it should return status '422 Unprocessable Entity'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property('code', 422);\r",
+									"    pm.expect(pm.response).to.have.property('status', \"Unprocessable Entity\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should return status field '\" + expectedMessage + \"' error message\", () => {\r",
+									"    pm.expect(jsonResponse[0].field).to.equal(\"status\");\r",
+									"    pm.expect(jsonResponse[0].message).to.equal(expectedMessage);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n    \"email\": \"{{$randomExampleEmail}}\",\r\n    \"gender\": \"female\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "email is invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"const expectedMessage = \"is invalid\";\r",
+									"\r",
+									"pm.test(\"it should return status '422 Unprocessable Entity'\", () => {\r",
+									"    pm.expect(pm.response).to.have.property('code', 422);\r",
+									"    pm.expect(pm.response).to.have.property('status', \"Unprocessable Entity\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"it should return email '\" + expectedMessage + \"' error message\", () => {\r",
+									"    pm.expect(jsonResponse[0].field).to.equal(\"email\");\r",
+									"    pm.expect(jsonResponse[0].message).to.equal(expectedMessage);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Hello World\",\r\n    \"email\": \"hello.w\",\r\n    \"gender\": \"male\",\r\n    \"status\": \"active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{api_version}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{api_version}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "endpoint",
+			"value": "https://gorest.co.in",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "gender",
+			"value": ""
+		},
+		{
+			"key": "status",
+			"value": ""
+		}
+	]
+}
